@@ -2,7 +2,7 @@
 
 The solution implements:
 
-- Adding products by product name and quantity
+- Adding products by product name and quantity 
 - Retrieving product prices from the provided Price API
 - Aggregating quantities for the same product
 - Calculating subtotal, tax, and total payable
@@ -13,7 +13,7 @@ The solution implements:
 - ShoppingCart handles business logic
 - PriceStrategy abstracts price retrieval
 - ApiPriceStrategy integrates with external API
-- TaxStrategy encapsulates tax calculation
+- TaxStrategy encapsulates tax calculations
 
 ### Patterns Used
 - Strategy pattern used only where behavior may vary (price retrieval, tax calculation)
