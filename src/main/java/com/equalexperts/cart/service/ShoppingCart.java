@@ -17,6 +17,7 @@ public class ShoppingCart {
     private final TaxStrategy taxStrategy;
 
     private final Map<String, CartItem> items = new HashMap<>();
+    private BigDecimal discountPercentage = BigDecimal.ZERO;
 
     public ShoppingCart(PriceStrategy priceStrategy, TaxStrategy taxStrategy) {
         this.priceStrategy = priceStrategy;
@@ -52,17 +53,50 @@ public class ShoppingCart {
                 .setScale(2, RoundingMode.HALF_UP);
     }
 
+    public void applyDiscount(BigDecimal discountPercentage) {
+        if (discountPercentage == null
+                || discountPercentage.compareTo(BigDecimal.ZERO) < 0
+                || discountPercentage.compareTo(new BigDecimal("100")) > 0) {
+            throw new IllegalArgumentException("Discount percentage must be between 0 and 100");
+        }
+
+        this.discountPercentage = discountPercentage;
+    }
+
+    public BigDecimal getDiscount() {
+        return getSubtotal()
+                .multiply(discountPercentage)
+                .divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
+    }
+
     public BigDecimal getTax() {
-        return taxStrategy.calculate(getSubtotal());
+        return taxStrategy.calculate(getSubtotalAfterDiscount());
     }
 
     public BigDecimal getTotal() {
-        return getSubtotal()
+        return getSubtotalAfterDiscount()
                 .add(getTax())
                 .setScale(2, RoundingMode.HALF_UP);
     }
 
     public Map<String, CartItem> getItems() {
         return Collections.unmodifiableMap(items);
+    }
+
+    private BigDecimal getSubtotalAfterDiscount() {
+        return getSubtotal()
+                .subtract(getDiscount())
+                .setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public void removeProduct(String product) {
+
+        if (product == null || product.isBlank()) {
+            throw new IllegalArgumentException("Invalid product name");
+        }
+
+        if(items.get(product) != null) {
+            items.remove(product);
+        }
     }
 }

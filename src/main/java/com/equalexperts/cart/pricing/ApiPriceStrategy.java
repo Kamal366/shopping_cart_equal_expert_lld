@@ -1,7 +1,7 @@
 package com.equalexperts.cart.pricing;
 
 import com.equalexperts.cart.common.PriceRetrievalException;
-import com.equalexperts.cart.model.response.PriceResponse;
+import com.equalexperts.cart.pricing.dto.PriceResponse;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
@@ -42,7 +42,7 @@ public class ApiPriceStrategy implements PriceStrategy{
                 );
             }
 
-            PriceResponse priceResponse =
+                PriceResponse priceResponse =
                     gson.fromJson(response.body(), PriceResponse.class);
 
             if (priceResponse == null || priceResponse.getPrice() == null) {

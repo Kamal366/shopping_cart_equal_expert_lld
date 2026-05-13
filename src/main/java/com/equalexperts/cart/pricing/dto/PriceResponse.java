@@ -1,4 +1,4 @@
-package com.equalexperts.cart.model.response;
+package com.equalexperts.cart.pricing.dto;
 
 import java.math.BigDecimal;
 

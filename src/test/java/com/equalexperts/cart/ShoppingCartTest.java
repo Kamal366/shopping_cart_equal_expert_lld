@@ -26,6 +26,21 @@ class ShoppingCartTest {
         cart.addProduct("cornflakes", 1);
         cart.addProduct("cornflakes", 1);
         cart.addProduct("weetabix", 1);
+        cart.removeProduct("weetabix");
+
+        assertEquals(new BigDecimal("5.04"), cart.getSubtotal());
+        assertEquals(new BigDecimal("0.63"), cart.getTax());
+        assertEquals(new BigDecimal("5.67"), cart.getTotal());
+    }
+
+    @Test
+    void shouldRemoveUnaddedProduct() {
+        ShoppingCart cart = new ShoppingCart(mockPrice, taxStrategy);
+
+        cart.addProduct("cornflakes", 1);
+        cart.addProduct("cornflakes", 1);
+        cart.addProduct("weetabix", 1);
+        cart.removeProduct("weetabix1");
 
         assertEquals(new BigDecimal("15.02"), cart.getSubtotal());
         assertEquals(new BigDecimal("1.88"), cart.getTax());
@@ -79,8 +94,30 @@ class ShoppingCartTest {
         ShoppingCart cart = new ShoppingCart(mockPrice, taxStrategy);
 
         assertEquals(new BigDecimal("0.00"), cart.getSubtotal());
+        assertEquals(new BigDecimal("0.00"), cart.getDiscount());
         assertEquals(new BigDecimal("0.00"), cart.getTax());
         assertEquals(new BigDecimal("0.00"), cart.getTotal());
+    }
+
+    @Test
+    void shouldApplyPercentageDiscountBeforeTax() {
+        ShoppingCart cart = new ShoppingCart(mockPrice, taxStrategy);
+
+        cart.addProduct("cornflakes", 2);
+        cart.applyDiscount(new BigDecimal("10"));
+
+        assertEquals(new BigDecimal("5.04"), cart.getSubtotal());
+        assertEquals(new BigDecimal("0.50"), cart.getDiscount());
+        assertEquals(new BigDecimal("0.57"), cart.getTax());
+        assertEquals(new BigDecimal("5.11"), cart.getTotal());
+    }
+
+    @Test
+    void shouldThrowForInvalidDiscountPercentage() {
+        ShoppingCart cart = new ShoppingCart(mockPrice, taxStrategy);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> cart.applyDiscount(new BigDecimal("101")));
     }
 
     @Test

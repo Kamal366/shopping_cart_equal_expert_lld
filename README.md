@@ -37,7 +37,7 @@ The solution implements:
 - Integration ApiPriceStrategyTest uses real API calls for validation
 
 ### Monetary data
-Monetary data use BigDeciaml and rounded using RoundingMode.HALF_UP
+- Monetary data use BigDecimal and rounded using RoundingMode.HALF_UP
 
 
 ### Assumptions and Tradeoffs
